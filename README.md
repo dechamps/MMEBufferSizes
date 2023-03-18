@@ -125,7 +125,7 @@ done when the amount of [padding] dips below 25 ms. Instead, MME lets the WASAPI
 buffer run out of data, thereby causing an underrun on the WASAPI side. This
 behaviour is incomprehensible and is likely an MME bug.
 
-[MME]: https://learn.microsoft.com/en-us/windows/win32/multimedia/waveform-audio-interface*
+[MME]: https://learn.microsoft.com/en-us/windows/win32/multimedia/waveform-audio-interface
 [pre-built binary]: https://github.com/dechamps/MMEBufferSizes/releases
 [API Monitor]: http://www.rohitab.com/apimonitor
 [WASAPI]: https://learn.microsoft.com/en-us/windows/win32/coreaudio/wasapi
