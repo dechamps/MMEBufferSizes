@@ -8,3 +8,5 @@ add_executable(MMEBufferSizes "MMEBufferSizes.c")
 target_link_libraries(MMEBufferSizes
 	PRIVATE winmm
 )
+
+install(TARGETS MMEBufferSizes RUNTIME)
