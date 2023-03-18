@@ -1,17 +1,31 @@
 #define _USE_MATH_DEFINES
 
 #include <Windows.h>
+#include <initguid.h>
 #include <mmreg.h>
+#include <mmdeviceapi.h>
 
 #include <math.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+DEFINE_GUID(CLSID_MMDeviceEnumerator, 0xbcde0395, 0xe52f, 0x467c, 0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e);
+DEFINE_GUID(IID_IMMDeviceEnumerator, 0xa95664d2, 0x9614, 0x4f35, 0xa7, 0x46, 0xde, 0x8d, 0xb6, 0x36, 0x17, 0xe6);
 
 #define SAMPLE_RATE 48000
 #define BUFFER_COUNT 2
 #define SINE_FREQUENCY_HZ 134.0
 #define SINE_LENGTH_SECONDS 1.0
 #define POLLING_PERIOD_MILLISECONDS 1
+
+// In order for API Monitor to "see" WASAPI calls coming from MME,
+// we need to make at least one call to WASAPI directly first. (No idea why.)
+static void PokeWASAPI() {
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) abort();
+
+	void* mmDeviceEnumerator;
+	if (FAILED(CoCreateInstance(&CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, &IID_IMMDeviceEnumerator, &mmDeviceEnumerator))) abort();
+}
 
 static void generateSineSamples(float* const samples, const size_t count, const unsigned long samplesPlayed) {
 	for (size_t offset = 0; offset < count; ++offset) {
@@ -40,6 +54,8 @@ int main(const int argc, const char* const* const argv) {
 	if (bufferSizeFrames <= 0) abort();
 
 	printf("Playing a %.1lf Hz sine wave at a %d Hz sample rate for %.3lf seconds using %d buffers of %d frames, polling every %d milliseconds\n", SINE_FREQUENCY_HZ, SAMPLE_RATE, SINE_LENGTH_SECONDS, BUFFER_COUNT, bufferSizeFrames, POLLING_PERIOD_MILLISECONDS);
+
+	PokeWASAPI();
 
 	WAVEFORMATEX waveFormatEx = {
 		.wFormatTag = WAVE_FORMAT_IEEE_FLOAT,
