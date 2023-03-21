@@ -26,6 +26,8 @@ able to handle this task just fine, but in practice it doesn't.
 This is reproducible on Windows 11 22H2 22621.1413 (at least) with a variety of
 audio devices.
 
+[Windows Feedback Hub entry](https://aka.ms/AAk0ka3)
+
 ## Steps to reproduce
 
 1. Build the code using Visual Studio, or fetch the [pre-built binary][].
